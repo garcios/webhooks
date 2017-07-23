@@ -16,6 +16,8 @@ const io = require('socket.io')(server);
 
 app.use(bodyParser.urlencoded({ extended: false } ));
 app.use(express.static('static'));
+// parse application/json
+app.use(bodyParser.json());
  
 // Set socket.io listeners.
 io.on('connection', (socket) => {
@@ -35,8 +37,10 @@ app.get('/', (req, res) => {
 // Set Express routes.
 app.post('/events', (req, res) => {
    
-   let groupName = "TASK";
-   let eventName = "TASK.Completed";
+   console.log(JSON.stringify(req.body));   
+   
+   let groupName = req.body.groupName;
+   let eventName = req.body.eventName;
    
    io.sockets.emit('event', { groupName: groupName, evenType: eventName });
    
